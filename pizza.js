@@ -1,7 +1,7 @@
 function PizzaCart(){
     return{
         pizzas: [],
-        username: 'Kat-mmm',
+        username: '',
         cartId: '',
         cartPizzas: [],
         cartTotal: 0,
@@ -11,6 +11,8 @@ function PizzaCart(){
         showPay: false,
         showCheckout: true,
         cartCount: 0,
+        showContainer: false,
+        showLogin: true,
         getPizzas(){
             axios.get("https://pizza-api.projectcodex.net/api/pizzas")
             .then((result) => {
@@ -36,6 +38,9 @@ function PizzaCart(){
             .then((result) => {
                 this.cartPizzas = result.data.pizzas;
                 this.cartTotal = result.data.total;
+                if(this.cartTotal == 0){
+                    this.showCart = false;
+                }
             });
         },
         addPizzaToCart(id){
@@ -86,10 +91,30 @@ function PizzaCart(){
             this.cartCount = this.cartPizzas.length;
             return this.cartCount;
         },
+        login(user){
+            if(user.length > 3){
+                localStorage.setItem('username', user);
+                this.username = localStorage.getItem('username');
+                this.showLogin = false;
+                this.showContainer = true;
+            }
+            else{
+                alert('Username too short!');
+            }
+        },
         init(){
             this.getPizzas();
             if(!this.cartId){
                 this.createCart();
+            }
+            if(localStorage.getItem('username')){
+                this.username = localStorage.getItem('username');
+                this.showLogin = false;
+                this.showContainer = true;
+            }
+            else{
+                this.showLogin = true;
+                this.showContainer = false;
             }
         },
     }

@@ -32,7 +32,7 @@ content-type: application/json
 
 {
 	"cart_code" : "6o9Pu4u8zB",
-	"pizza_id" : 2
+	"pizza_id" : 7
 }
 
 ### Remove a pizza from the cart

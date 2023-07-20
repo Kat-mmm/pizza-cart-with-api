@@ -8,13 +8,25 @@
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <script src="https://kit.fontawesome.com/0dc0e0665a.js" crossorigin="anonymous"></script>
     <title>Pizza Cart</title>
-    <!-- <script>
-        axios.get("https://pizza-api.projectcodex.net/api/pizzas")
-        .then(result => console.log(result.data.pizzas));
-    </script> -->
 </head>
-<body>
-    <div x-data="pizzaCart" class="container">
+<body x-data="pizzaCart">
+
+    <div class="login-container" x-show="showLogin">
+        <div class="left-side">
+
+        </div>
+        <div class="right-side">
+            <img src="./images/logo.jpg" alt="logo">
+            <h3>Welcome to Perfect Pizzas</h3>
+            <div class="inputs">
+                <label for="username">Let's get your username: </label>
+                <input type="text" name="username" id="username" x-ref="user">
+            </div>
+            <button @click="login($refs.user.value)">Proceed</button>
+        </div>
+    </div>
+    
+    <div class="container" x-show="showContainer">
         <div class="nav">
             <img src="./images/logo.jpg" alt="perfect pizza" class="logo">
             <div class="right">
@@ -22,10 +34,10 @@
                     <p x-text="username"></p>
                     <img src="./images/person.png" alt="person" class="person">
                 </div>
-                <div class="bag">
+                <a class="bag" style="cursor: pointer;" href="#cart">
                     <img src="./images/shopping-cart.png" alt="shopping bag">
                     <span class="cart-count" x-text="setCartCount()"></span>
-                </div>
+                </a>
             </div>
         </div>
         <!-- <div>
@@ -36,28 +48,31 @@
                 <h1>Delicious Pizza Is</h1>
                 <h1>Waiting For You</h1>
                 <p>come and enjoy something special with our perfect pizza.</p>
-                <button>choose your pizza</button>
+                <button id="cart">choose your pizza</button>
             </div>
             <img src="./images/traditional-supreme-pizza-isolated-white-background.jpg" alt="">
         </div>
 
         <div x-show="showCart" class="cart">
-            <h3>Shopping Cart</h3>
+            <h2>Shopping Cart</h2>
             <div class="cart-items">
                 <template x-for="pizza in cartPizzas">
                     <div class="cart-item">
-                      <p x-text="pizza.flavour"></p>
-                      <div style="display: flex; gap: 10px; align-items: center;">
-                        <button @click="addPizzaToCart(pizza.id)">+</button>
-                        <button @click="removePizzaFromCart(pizza.id)">-</button>
+                        <p x-text="pizza.flavour"></p>
+                        <div style="display: flex; gap: 10px; align-items: center;">
+                        <div class="add-minus">
+                            <button @click="addPizzaToCart(pizza.id)"><i class="fa-solid fa-plus"></i></button>
+                            <p x-text="pizza.qty"></p>
+                            <button @click="removePizzaFromCart(pizza.id)"><i class="fa-solid fa-minus"></i></button>
+                        </div>
                       </div>
                       <p>R <span x-text="pizza.total.toFixed(2)"></span></p>
                     </div>
                 </template>
             </div>
-            <p>Total Cost R<span x-text="cartTotal.toFixed(2)"></span></p>
+            <h4>Total Cost R<span x-text="cartTotal.toFixed(2)"></span></h4>
 
-            <div x-show="showPay">
+            <div x-show="showPay" class="checkout">
                 <p x-text="paymentResponse" x-bind:class=""></p>
                 <label for="payment">Payment goes here: </label>
                 <input type="number" name="payment" id="payment" x-ref="amount"><br><br>
@@ -66,56 +81,71 @@
             <button x-show="showCheckout" @click="showPay = true; showCheckout = false">CHECKOUT</button>
         </div>
 
+        <div class="pizzas-header">
+            <img src="./images/pizza (1).png" alt="pizza">
+            <h1>Featured Pizzas</h1>
+        </div>
         <div class="pizzas" id="pizzas">
             <div class="item">
                 <img src="./images/delicious-italian-food-removebg-preview.png" alt="large pizza">
                 <h4>Large Pizza</h4>
                 <h6>R 87.99</h6>
-                <p>large margeritha pizza with 3 toppings max. 3 meat toppings max. 3 or less other toppings.</p>
-                <button @click="">BUY</button>
+                <p>large pizza with 3 toppings max. 3 meat toppings max. 3 or less other toppings.</p>
+                <!-- <button @click="">BUY</button> -->
             </div>
             <div class="item">
                 <img src="./images/delicious-italian-pizza-with-tomato-olives-pepperoni-mushrooms-top-view-isolated-white-background-still-life-copy-space-removebg-preview.png" alt="medium pizza">
                 <h4>Medium Pizza</h4>
                 <h6>R 58.99</h6>
-                <p>medium margeritha pizza with 3 toppings max. 3 meat toppings max. 3 or less other toppings.</p>
-                <button @click="">BUY</button>
+                <p>medium pizza with 3 toppings max. 3 meat toppings max. 3 or less other toppings.</p>
+                <!-- <button @click="">BUY</button> -->
             </div>
             <div class="item">
                 <img src="./images/pizza-with-cheese-tomato-isolated-white-background-pizza-margarita-top-view-photo-menu-removebg-preview.png" alt="small pizza">
                 <h4>Small Pizza</h4>
                 <h6>R 31.99</h6>
-                <p>small margeritha pizza with 3 toppings max. 3 meat toppings max. 3 or less other toppings.</p>
-                <button @click="">BUY</button>
+                <p>small pizza with 3 toppings max. 3 meat toppings max. 3 or less other toppings.</p>
+                <!-- <button @click="">BUY</button> -->
             </div>
         </div>
 
         <div class="all-pizzas">
             <template x-for="pizza in pizzas">
                 <div class="pizza-box">
-                    <p x-text="pizza.flavour"></p>
-                    <p>R <span x-text="pizza.price">67.99</span></p>
+                    <img src="./images/front-view-delicious-cheese-pizza-consists-olives-pepper-tomatoes-dark-surface-removebg-preview.png" alt="pizza">
+                    <p x-text="pizza.size"></p>
+                    <p class="flavour" x-text="pizza.flavour"></p>
+                    <p class="price">R <span x-text="pizza.price">67.99</span></p>
                     <button @click="addPizzaToCart(pizza.id)">BUY</button>
                 </div>
             </template>
         </div>
 
-        <div class="footer">
-            <div class="contact">
-                <span>Contact us at: (021)-541-1000 twitter </span><br>
-                <span>/fb </span><br>
-                <span>/insta</span><br> 
-                <span>@perfectpizza</span>
+        <footer class="footer">
+            <div class="footer-logo">
+                <img src="./images/logo.jpg" alt="Pizza Cart Logo">
+            </div>
+            <div class="contact-info">
+                <h3>Contact us</h3>
+                <p>Phone: (021)-541-1000</p>
+                <p>Email: contact@perfectpizza.com</p>
+                <p>Social Media:</p>
+                <div class="social-icons">
+                    <a href="https://twitter.com/perfectpizza" target="_blank"><i class="fa-brands fa-twitter"></i></a>
+                    <a href="https://facebook.com/perfectpizza" target="_blank"><i class="fa-brands fa-facebook"></i></a>
+                    <a href="https://instagram.com/perfectpizza" target="_blank"><i class="fa-brands fa-instagram"></i></a>
+                </div>
             </div>
             <div class="address">
-                <span>Pizza Plaza</span><br>
-                <span>Dough Road</span><br>
-                <span>Base Town</span>
+                <h3>Our Location</h3>
+                <p>Pizza Plaza</p>
+                <p>Dough Road</p>
+                <p>Base Town</p>
             </div>
-        </div>
-    </div>
+        </footer>
 
     <script src="./pizza.js"></script>
     <script src="https://unpkg.com/alpinejs" defer></script>
+    <script src="https://kit.fontawesome.com/0dc0e0665a.js" crossorigin="anonymous"></script>
 </body>
 </html>
